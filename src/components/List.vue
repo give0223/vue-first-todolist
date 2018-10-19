@@ -1,6 +1,7 @@
 <template>
   <div>
     <h1>{{title}}</h1>
+    <childcompon @show-msg="getmsg"></childcompon>
     <div>
       <input v-model.trim="newItem" @keyup.enter="addItem" type="text" placeholder="do something...">
       <ul>
@@ -12,13 +13,25 @@
 
 <script>
 import Store from './Store.js';
+import childcompon from './childcomponent.vue';
 export default {
   data() {
     return {
       title: 'This is Todo List Project',
       newItem: '',
-      items: []
+      items: Store.fetch()
     };
+  },
+  components: {
+    childcompon
+  },
+  watch: {
+    items: {
+      handler: function(items) {
+        Store.save(items);
+      },
+      deep: true
+    }
   },
   methods: {
     toggleFinish(item) {
@@ -34,6 +47,9 @@ export default {
         });
       }
       this.newItem = '';
+    },
+    getmsg(chmsg) {
+      alert(chmsg);
     }
   }
 };
